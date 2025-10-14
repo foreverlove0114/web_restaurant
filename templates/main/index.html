@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Flask & Feast{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <h1>Delicious dishes delivered straight to your home</h1>
+    <p>Enjoy the best dishes, prepared with love and the freshest ingredients</p>
+    <a href="{{ url_for('menu.show_menu') }}" class="cta-button">View Menu</a>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">Why Choose Us</h2>
+        <div class="feature-cards">
+            <div class="feature-card">
+                <div class="feature-icon">🍽️</div>
+                <h3>Freshest Ingredients</h3>
+                <p>We use only the highest quality and freshest products for our dishes.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Fast Delivery</h3>
+                <p>We deliver your order as quickly as possible to ensure your food stays hot.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👨‍🍳</div>
+                <h3>Professional Chefs</h3>
+                <p>Our chefs have years of experience in preparing the tastiest dishes.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main/index.css') }}">
+{% endblock %}

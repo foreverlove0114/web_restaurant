@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Reservations - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/checks.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Checking reservations</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Time</th>
+        <th>Table Type</th>
+        <th>User</th>
+        <th>Action</th>
+    </tr>
+    {% for res in all_reservations %}
+    <tr>
+        <td>{{ res.id }}</td>
+        <td>{{ res.time_start }}</td>
+        <td>{{ res.type_table }}</td>
+        <td>{{ res.user.nickname }}</td>
+        <td>
+            <form method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="reserv_id" value="{{ res.id }}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

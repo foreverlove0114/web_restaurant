@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Editing a position - Flask & Feats{% endblock %}
+
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/position_admin.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="position-info">
+        <p>Name: {{ us_position.name }}</p>
+        <p>Weight: {{ us_position.weight }} g<p>
+        <p>Ingredients: {{ us_position.ingredients }}.<p>
+        <p>Price: {{ us_position.price }} UAH<p>
+        <p>Active: {{ us_position.active }}<p>
+        <img src="{{ url_for('static', filename='menu/' ~ us_position.file_name) }}" alt="{{ us_position.name }}">
+    </div>
+    <div class="position-form">
+    <h2>Editing item</h2>
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <input type="text" name="name" placeholder="name" >
+
+        <input type="file" name="img" accept="image/*">
+
+        <textarea name="ingredients" placeholder="Ingredients" ></textarea>
+
+        <textarea name="description" placeholder="Description" ></textarea>
+
+        <input type="number" name="price" placeholder="Price (UAN)" >
+
+        <input type="number" id="weight" name="weight" placeholder="Weight (g)" >
+
+        <div class="toggle-wrapper">
+            <label class="switch">
+                <input type="checkbox" id="active" name="active"
+                {% if us_position.active %}checked{% endif %}>
+                <span class="slider"></span>
+             </label>
+            <label for="active" class="switch-label">Active</label>
+        </div>
+
+
+        <button type="submit">Edit position</button>
+    </form>
+    </div>
+</div>
+{% endblock %}

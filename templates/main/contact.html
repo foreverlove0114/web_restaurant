@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Contact - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/main/contact.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <div class="contact-hero">
+        <div class="container">
+            <h1 class="page-title">Contact Us</h1>
+            <p class="subtitle">We are always happy to hear from you</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="info-card">
+                    <div class="info-icon">📍</div>
+                    <h3>Address</h3>
+                    <p>15 Khreshchatyk St.</p>
+                    <p>Kyiv, 01001</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">📞</div>
+                    <h3>Phone</h3>
+                    <p>+380 (44) 123-4567</p>
+                    <p>+380 (67) 987-6543</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">✉️</div>
+                    <h3>Email</h3>
+                    <p>info@flaskfeats.com</p>
+                    <p>support@flaskfeats.com</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">🕒</div>
+                    <h3>Working Hours</h3>
+                    <p>Mon-Fri: 9:00 AM - 10:00 PM</p>
+                    <p>Sat-Sun: 10:00 AM - 11:00 PM</p>
+                </div>
+            </div>
+
+            <div class="contact-form-container">
+                <h2>Send Us a Message</h2>
+                <form class="contact-form" action="{{ url_for('main.contact') }}" method="POST" >
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" placeholder="Message subject" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Enter your message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <h2>Our Location</h2>
+            <div class="map">
+                <iframe src="нема"  width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

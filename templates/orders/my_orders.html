@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/orders/my_orders.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="info">
+        <h2>Your Orders</h2>
+        {% if us_orders %}
+        <div class="orders">
+            {% for order in us_orders %}
+            <div class="order-item">
+                <p>Order №{{ order.id }} from {{ order.order_time }}</p>
+                <a href="/my_order/{{ order.id }}">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-orders">
+            <p>You don’t have any orders yet</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

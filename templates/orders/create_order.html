@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Cart - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/orders/create_order.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="order-container">
+    <div class="container">
+        <h1 class="page-title">Your Cart</h1>
+
+        {% if basket %}
+            <div class="order-summary">
+                <div class="order-items">
+                    <h2>Selected Items</h2>
+                    <ul class="basket-list">
+                        {% for position_id, item_data in basket.items() %}
+                        <li class="basket-item">
+                            <div class="item-name">{{ item_data.name }}</div>
+                            <div class="item-quantity">Quantity: {{ item_data.num }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="total-price">
+                        <h3>Total Price: {{ total_price }} UAH</h3>
+                    </div>
+                </div>
+
+                <div class="order-action">
+                    <div class="order-note">
+                        <p>Please review your order before checkout.</p>
+                        <p>Delivery is made within 30-60 minutes after order confirmation.</p>
+                    </div>
+
+                    <form method="post" action="{{ url_for('order.create_order') }}" class="checkout-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <button type="submit" class="btn btn-checkout">Place Order</button>
+                        <a href="{{ url_for('order.my_orders') }}" class="btn btn-secondary" style="margin-left: 1rem;">Active Orders</a>
+                    </form>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-basket">
+                <div class="empty-icon">🛒</div>
+                <h2>Your Cart is Empty</h2>
+                <p>Add delicious dishes from our menu to place an order.</p>
+                <a href="{{ url_for('menu.show_menu') }}" class="btn">Go to Menu</a>
+                <a href="{{ url_for('order.my_orders') }}" class="btn btn-secondary">Active Orders</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

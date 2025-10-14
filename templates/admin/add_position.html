@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Adding a new item - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/position_admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="position-form">
+    <h2>Adding a new item</h2>
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <input type="text" name="name" placeholder="Item name" required>
+
+        <input type="file" name="img" accept="image/*">
+
+        <textarea name="ingredients" placeholder="Ingredients" required></textarea>
+
+        <textarea name="description" placeholder="Description" required></textarea>
+
+        <input type="number" name="price" placeholder="price (UAN)" required>
+
+        <input type="number" id="weight" name="weight" placeholder="Weight (g)" required>
+
+        <button type="submit">Add product</button>
+    </form>
+    </div>
+</div>
+{% endblock %}

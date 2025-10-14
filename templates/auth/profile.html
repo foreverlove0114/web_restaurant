@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="container">
+        <div class="profile-header">
+            <h1>Your Profile</h1>
+            <p>Manage your personal information and settings</p>
+        </div>
+        
+        <div class="profile-content">
+            {% if current_user.role_id == 2 %}
+            <div class="admin-content">
+                <a href="{{ url_for('admin.all_users') }}">All users</a>
+                <a href="{{ url_for('admin.reservations_check') }}">Check reservations</a>
+                <a href="{{ url_for('admin.menu_check') }}">Check menu</a>
+                <a href="{{ url_for('admin.add_position') }}">Add position</a>
+            </div>
+        {% endif %}
+            <div class="profile-card account-info">
+                <h2>Personal information</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Nickname:</span>
+                        <span class="info-value">{{ current_user.nickname }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">{{ current_user.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">{{ current_user.contact }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Address:</span>
+                        <span class="info-value">{{ current_user.fullAddress }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-card">
+                <h2>Change password</h2>
+                <form method="POST" action="{{ url_for('profile.change_password') }}" class="profile-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <div class="form-group">
+                        <label for="oldpassword">Old password</label>
+                        <input type="password" id="oldpassword" name="oldpassword" placeholder="Enter your current password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newpassword">New password</label>
+                        <input type="password" id="newpassword" name="newpassword" placeholder="Enter a new password" required>
+                    </div>
+                    <button type="submit" class="btn">Change password</button>
+                </form>
+            </div>
+            
+            <div class="profile-card">
+                <h2>Change address</h2>
+                <form method="POST" action="{{ url_for('profile.change_address') }}" class="profile-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <div class="form-group">
+                        <label for="new_address">New address</label>
+                        <input type="text" id="new_address" name="new_address" placeholder="Input new address" required>
+                    </div>
+                    <button type="submit" class="btn">Change address</button>
+                </form>
+            </div>
+            
+            <div class="profile-card logout-section">
+                <h2>Log out of account</h2>
+                <p>Click the button below to log out of your account.</p>
+                <form action="{{ url_for('auth.logout') }}">
+                    <button type="submit" class="btn btn-logout">Log out</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/reservations/reserved.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Table Reservation</h2>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+    <label for="table_type">Table Type:</label>
+    <select name="table_type" id="table_type" required>
+        <option value="2">2-person table</option>
+        <option value="4">4-person table</option>
+        <option value="6">6-person table</option>
+        <option value="8">8-person table</option>
+    </select>
+
+    <label for="time">Reservation Time:</label>
+    <input type="datetime-local" name="time" id="time" required>
+
+    <button type="submit">Make Reservation</button>
+</form>
+
+<a href=""></a>
+{% endblock %}

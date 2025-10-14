@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}View users - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/checks.css') }}">
+{% endblock %}
+
+{% block content %}
+<h2>Users</h2>
+<table>
+    <tr><th>ID</th><th>Nickname</th><th>Role id</th><th>Email</th><th>Contact</th><th>Full Address</th></tr>
+    {% for user in all_users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.nickname }}</td>
+        <td>{{ user.role_id }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.contact }}</td>
+        <td>{{ user.fullAddress }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

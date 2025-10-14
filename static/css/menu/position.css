@@ -1,0 +1,147 @@
+.position-container {
+    padding: 3rem 0;
+    background-color: var(--light-color);
+}
+
+.position-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.position-image {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.position-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.position-info {
+    padding: 2rem;
+}
+
+.position-title {
+    color: var(--secondary-color);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.5rem;
+}
+
+.weight {
+    color: #777;
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.ingredients, .description {
+    margin-bottom: 1.5rem;
+}
+
+.ingredients h3, .description h3 {
+    color: var(--secondary-color);
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.ingredients p {
+    color: #555;
+    font-style: italic;
+}
+
+.description p {
+    color: #444;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.position-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.price {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.add-to-cart-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quantity-control label {
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.quantity-control input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.add-to-cart-form .btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    background-color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-form .btn:hover {
+    background-color: #e55a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+    .position-details {
+        flex-direction: row;
+    }
+
+    .position-image {
+        width: 40%;
+        height: auto;
+    }
+
+    .position-info {
+        width: 60%;
+    }
+}
+
+@media (max-width: 576px) {
+    .position-title {
+        font-size: 1.6rem;
+    }
+
+    .position-info {
+        padding: 1.5rem;
+    }
+
+    .position-footer {
+        gap: 1rem;
+    }
+}

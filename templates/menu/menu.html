@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Menu - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/menu/menu.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="menu-header">
+    <div class="container">
+        <h1 class="page-title">Our Menu</h1>
+        <form method="get" action="{{ url_for('menu.show_menu') }}" class="search-form">
+            <input type="text" name="q" placeholder="Search by name" value="{{ q }}">
+            <button type="submit" class="btn">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="menu-section">
+    <div class="container">
+        <div class="menu-container">
+            {% for position in all_positions %}
+                <div class="menu-item">
+                    <div class="menu-item-image">
+                        <img src="/static/menu/{{ position.file_name }}" alt="{{ position.name }}">
+                    </div>
+                    <div class="menu-item-content">
+                        <h3>{{ position.name }} <span class="weight">({{ position.weight }}g)</span></h3>
+                        <p class="description">{{ position.description }}</p>
+                        <div class="menu-item-footer">
+                            <p class="price">{{ position.price }} UAH</p>
+                            <a href="{{ url_for('menu.position', id=position.id ) }}" class="btn">More Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

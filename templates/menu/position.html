@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ position.name }} - Flask & Feats{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/menu/position.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="position-container">
+    <div class="container">
+        <div class="position-details">
+            <div class="position-image">
+                <img src="/static/menu/{{position.file_name}}" alt="{{position.name}}">
+            </div>
+            <div class="position-info">
+                <h1 class="position-title">{{position.name}} <span class="weight">({{position.weight}}g)</span></h1>
+                <div class="ingredients">
+                    <h3>Ingredients:</h3>
+                    <p>{{position.ingredients}}</p>
+                </div>
+                <div class="description">
+                    <h3>Description:</h3>
+                    <p>{{position.description}}</p>
+                </div>
+                <div class="position-footer">
+                    <div class="price">{{position.price}} UAH</div>
+                    <form method="post" action="{{ url_for('menu.position', id=position.id) }}" class="add-to-cart-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="id" value="{{position.id}}">
+                        <div class="quantity-control">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" name="num" min="1" value="1" required>
+                        </div>
+                        <button type="submit" class="btn">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
