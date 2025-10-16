@@ -1,11 +1,5 @@
 from routes.test.conftest import BASE_URL
-
-TEST_CONTACT_MESSAGE = {
-    "name":"testuser",
-    "email":"testuser@gmail.com",
-    "subject":"Complain about...",
-    "message":"I wanna complain about..."
-}
+from routes.test.conftest import TEST_CONTACT_MESSAGE
 
 def test_home_page(session):
     response = session.get(f"{BASE_URL}/")
