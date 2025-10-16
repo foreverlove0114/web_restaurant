@@ -29,7 +29,7 @@ def test_reserved_clash_with_time_same_user(logged_in_user):
     pass
 
 
-def test_reserved_successfully(logged_in_user):
+def test_reserved_different_scenarios(logged_in_user):
     """测试成功创建预约"""
     get_response = logged_in_user.get(f"{BASE_URL}/reserved")
     csrf_token = extract_csrf_token(get_response)
