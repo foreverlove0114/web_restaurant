@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 import random
 import re
 
+from sqlalchemy.sql.coercions import expect
+
 BASE_URL = os.getenv('BASE_URL', 'http://localhost:8000')
 
 TEST_USER = {
@@ -37,6 +39,20 @@ def logged_in_user(session):
     login_data = {
         "nickname": TEST_USER["nickname"],
         "password": TEST_USER["password"],
+        'csrf_token': csrf_token
+    }
+
+    session.post(f"{BASE_URL}/login", data=login_data)
+    return session
+
+@pytest.fixture(scope="function")
+def logged_in_admin(session):
+    get_response = session.get(f"{BASE_URL}/login")
+    csrf_token = extract_csrf_token(get_response)
+
+    login_data = {
+        "nickname": "superadmin",
+        "password": "admin123",
         'csrf_token': csrf_token
     }
 
@@ -91,6 +107,41 @@ def user_with_place_order_already(user_with_cart_item):
         return user_with_cart_item
     pytest.skip("无法从响应中提取订单ID")
     return None
+
+
+@pytest.fixture(scope="function")
+def get_first_reservation_id(logged_in_admin):
+    """获取第一个预订的ID"""
+    try:
+        response = logged_in_admin.get(f"{BASE_URL}/reservations_check")
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # 查找包含预订信息的表格行
+        # 根据你的HTML结构，预订ID应该在第一个<td>中
+        rows = soup.find_all('tr')[1:]  # 跳过表头行
+
+        if not rows:
+            print("❌ 没有找到任何预订记录")
+            return None
+
+        # 获取第一行的第一个td（包含ID）
+        first_row = rows[0]
+        first_td = first_row.find('td')
+
+        if first_td and first_td.text.strip().isdigit():
+            reservation_id = int(first_td.text.strip())
+            print(f"✅ 找到第一个预订ID: {reservation_id}")
+            return reservation_id
+        else:
+            print("❌ 无法解析预订ID")
+            return None
+
+    except Exception as e:
+        print(f"❌ 获取预订ID失败: {e}")
+        return None
+
 
 
 def extract_csrf_token(html_content):
