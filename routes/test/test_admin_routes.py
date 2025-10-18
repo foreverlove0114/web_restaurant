@@ -82,20 +82,20 @@ def test_post_add_position_NoImage(logged_in_admin):
     print("✅ 成功检测到缺少文件")
 
 def test_get_edit_position(logged_in_admin):
-    response = logged_in_admin.get(f"{BASE_URL}/edit_position/1")
+    response = logged_in_admin.get(f"{BASE_URL}/edit_position/2")
     assert response.status_code == 200
     assert "Editing item" in response.text
     assert "Active" in response.text
 
 def test_get_edit_position_user(logged_in_user):
-    response = logged_in_user.get(f"{BASE_URL}/edit_position/1")
+    response = logged_in_user.get(f"{BASE_URL}/edit_position/2")
     assert response.status_code == 200
     assert "Access denied! Only administrators can edit menu." in response.text
 
 def test_post_edit_position(logged_in_admin):
     """基础编辑菜品测试"""
     # 获取编辑页面
-    get_response = logged_in_admin.get(f"{BASE_URL}/edit_position/1")
+    get_response = logged_in_admin.get(f"{BASE_URL}/edit_position/2")
     csrf_token = extract_csrf_token(get_response)
 
     # 准备编辑数据
@@ -110,7 +110,7 @@ def test_post_edit_position(logged_in_admin):
 
     # 提交编辑
     response = logged_in_admin.post(
-        f"{BASE_URL}/edit_position/1",
+        f"{BASE_URL}/edit_position/2",
         data=edit_data
     )
 
@@ -226,8 +226,10 @@ def test_menu_check_delete_position(logged_in_admin):
     assert "Test Pizza" not in response.text
     print("✅ 成功删除测试菜品")
 
-
-
+def test_admin_get_all_users(logged_in_admin):
+    response = logged_in_admin.get(f"{BASE_URL}/all_users")
+    assert response.status_code == 200
+    assert "Users" in response.text
 
 ######################################################################
 #                       辅助方法

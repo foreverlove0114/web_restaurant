@@ -6,7 +6,7 @@ import os
 from bs4 import BeautifulSoup
 import random
 import re
-
+from online_restaurant_db import Session,Menu
 from sqlalchemy.sql.coercions import expect
 
 BASE_URL = os.getenv('BASE_URL', 'http://localhost:8000')
@@ -189,3 +189,29 @@ def extract_order_id_from_text(text):
     return None
 
 
+@pytest.fixture
+def deletable_menu_item():
+    """创建专门用于删除测试的菜品"""
+    with Session() as session:
+        import uuid
+        unique_name = f"Delete Test {uuid.uuid4().hex[:8]}"
+        test_item = Menu(
+            name=unique_name,
+            ingredients="Test ingredients",
+            description="Test description",
+            price=100,
+            weight="200g",
+            file_name="delete_test.jpg",
+            active=True
+        )
+        session.add(test_item)
+        session.commit()
+        session.refresh(test_item)
+
+        yield test_item  # 提供给测试使用
+
+        # 测试后清理（如果菜品还存在）
+        remaining_item = session.query(Menu).filter_by(id=test_item.id).first()
+        if remaining_item:
+            session.delete(remaining_item)
+            session.commit()
