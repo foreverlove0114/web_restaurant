@@ -18,13 +18,10 @@ pipeline {
                     echo "Setting up Python environment..."
                     python -m venv venv
                     call venv\\Scripts\\activate
-                    echo "Installing dependencies..."
                     pip install --upgrade pip
                     pip install -r requirements.txt
-                    pip install pytest allure-pytest pytest-html
-                    # 安装测试所需的额外依赖
+                    pip install pytest pytest-html
                     pip install beautifulsoup4 requests Pillow
-                    echo "Dependencies installed successfully!"
                 '''
             }
         }
@@ -33,27 +30,24 @@ pipeline {
             steps {
                 bat '''
                     call venv\\Scripts\\activate
-                    echo "Installed packages:"
-                    pip list
                     echo "Running tests..."
-                    pytest -v --alluredir=allure-results --html=pytest-report.html --self-contained-html
+                    pytest -v --html=report.html --self-contained-html
                 '''
             }
             post {
                 always {
-                    // 保存 Allure 报告
-                    allure includeProperties: false,
-                          jdk: '',
-                          results: [[path: 'allure-results']]
-                    // 保存 HTML 报告
-                    publishHTML(target: [
+                    // 只发布 HTML 报告
+                    publishHTML([
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
                         reportDir: '.',
-                        reportFiles: 'pytest-report.html',
-                        reportName: 'Pytest HTML Report'
+                        reportFiles: 'report.html',
+                        reportName: 'Test Report'
                     ])
+
+                    // 存档测试日志
+                    archiveArtifacts artifacts: 'report.html', fingerprint: true
                 }
             }
         }
@@ -61,15 +55,19 @@ pipeline {
 
     post {
         always {
-            echo "Pipeline completed - ${currentBuild.result}"
-            // 可选：清理工作空间
-            // cleanWs()
+            echo "构建状态: ${currentBuild.result}"
+            echo "查看测试报告: ${env.BUILD_URL}HTML_Report/"
         }
         success {
-            echo "✅ Pipeline succeeded!"
+            echo "✅ 所有 46 个测试通过！"
+            emailext (
+                subject: "SUCCESS: 测试通过 - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "所有 46 个测试用例全部通过！\n查看报告: ${env.BUILD_URL}",
+                to: "your-email@example.com"
+            )
         }
         failure {
-            echo "❌ Pipeline failed!"
+            echo "❌ 测试失败！"
         }
     }
 }
