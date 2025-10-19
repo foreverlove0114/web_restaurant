@@ -5,14 +5,14 @@ pipeline {
         // 1. Poll SCM 触发器 - 每30分钟检查一次
         pollSCM('H/30 * * * *')
 
-        // 2. Generic Webhook Trigger
-        genericTrigger(
+        // 2. Generic Webhook Trigger - 注意首字母大写
+        GenericTrigger(
             genericVariables: [
                 [key: 'ref', value: '$.ref'],
                 [key: 'repository_url', value: '$.repository.html_url']
             ],
             causeString: 'Triggered by $ref',
-            token: 'WEBHOOK_TOKEN_12345', // 可选安全令牌
+            token: 'WEBHOOK_TOKEN_12345',
             printContributedVariables: true,
             printPostContent: true,
             silentResponse: false
@@ -21,7 +21,7 @@ pipeline {
 
     environment {
         BASE_URL = 'http://localhost:8000'
-        PYTHON_PATH = 'C:\\Python313\\python.exe'  // 根据你的环境调整
+        PYTHON_PATH = 'C:\\Python313\\python.exe'
     }
 
     stages {
@@ -55,10 +55,11 @@ pipeline {
             }
             post {
                 always {
-                    // 保存测试报告
+                    // 保存 Allure 报告
                     allure includeProperties: false,
                           jdk: '',
                           results: [[path: 'allure-results']]
+                    // 保存 HTML 报告
                     publishHTML(target: [
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
@@ -80,7 +81,6 @@ pipeline {
                     echo "Deploying application..."
                     call venv\\Scripts\\activate
                     # 这里添加你的部署命令
-                    # 例如: python app.py 或你的部署脚本
                     echo "Deployment completed!"
                 '''
             }
@@ -90,22 +90,12 @@ pipeline {
     post {
         always {
             echo "Pipeline completed - ${currentBuild.result}"
-            // 清理工作空间（可选）
-            // cleanWs()
         }
         success {
-            emailext (
-                subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: "测试通过，部署成功！\n检查报告: ${env.BUILD_URL}",
-                to: "your-email@example.com"
-            )
+            echo "✅ Pipeline succeeded!"
         }
         failure {
-            emailext (
-                subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                body: "测试失败，请检查！\n详情: ${env.BUILD_URL}",
-                to: "your-email@example.com"
-            )
+            echo "❌ Pipeline failed!"
         }
     }
 }
