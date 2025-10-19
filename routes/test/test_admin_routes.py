@@ -253,4 +253,3 @@ def create_test_image_blue():
     return img_byte_arr
 
 
-#测试CICD
