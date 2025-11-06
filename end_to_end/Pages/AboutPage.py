@@ -1,6 +1,6 @@
 # tests/pages/about_page.py
 from selenium.webdriver.common.by import By
-from .base_page import BasePage
+from .BasePage import BasePage
 
 class AboutPage(BasePage):
     """
@@ -43,3 +43,4 @@ class AboutPage(BasePage):
     def get_team_members_count(self):
         """获取团队成员数量"""
         return len(self.find_elements(self.TEAM_MEMBERS))
+

@@ -8,6 +8,7 @@ from sqlalchemy.sql.base import elements
 class BasePage:
 
     def __init__(self,driver):
+        print(f"🔧 BasePage 初始化，接收到 driver: {id(driver)}")
         self.driver = driver
         self.wait = WebDriverWait(driver,10)
 

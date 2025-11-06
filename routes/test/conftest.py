@@ -12,8 +12,8 @@ from sqlalchemy.sql.coercions import expect
 BASE_URL = os.getenv('BASE_URL', 'http://localhost:8000')
 
 TEST_USER = {
-    "nickname": "testuser",
-    "email": "testuser@email.com",
+    "nickname": "testuser_1234",
+    "email": "testuser_1234@email.com",
     "contact": "0123456789",
     "fullAddress": "123 street",
     "password": "test123"

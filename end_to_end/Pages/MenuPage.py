@@ -20,6 +20,7 @@ class MenuPage(BasePage):
         return self.get_text(self.PAGE_TITLE)
 
     def search_menu_items(self,query):
+        print(f"开始搜索")
         self.send_keys(self.SEARCH_INPUT, query)
         self.click_element(self.SEARCH_BUTTON)
 

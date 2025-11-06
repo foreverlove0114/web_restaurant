@@ -22,20 +22,23 @@ class HomePage(BasePage):
     FEATURE_CARDS = (By.CLASS_NAME, "feature-card")
     CART_ICON = (By.CLASS_NAME, "cart-icon")
 
-    def __init__(self,driver):
+    def __init__(self, driver):
+        print(f"🔧 HomePage 初始化，接收到 driver: {id(driver)}")
         super().__init__(driver)
         self.driver = driver
+        print(f"🔧 HomePage 初始化完成，self.driver: {id(self.driver)}")
 
     def navigate_to_menu(self):
+        print(f"开始导航至menu page")
         self.click_element(self.NAVBAR_MENU)
         from .MenuPage import MenuPage
         return MenuPage(self.driver)
 
-    def navigate_to_reservations(self):
-        """导航到预订页面"""
-        self.click_element(self.NAVBAR_RESERVATIONS)
-        from .ReservationsPage import ReservationsPage
-        return ReservationsPage(self.driver)
+    # def navigate_to_reservations(self):
+    #     """导航到预订页面"""
+    #     self.click_element(self.NAVBAR_RESERVATIONS)
+    #     from .ReservationsPage import ReservationsPage
+    #     return ReservationsPage(self.driver)
 
     def navigate_to_about(self):
         """导航到关于我们页面"""
@@ -53,6 +56,7 @@ class HomePage(BasePage):
         """导航到登录页面"""
         self.click_element(self.LOGIN_LINK)
         from .LoginPage import LoginPage
+        print(f"进入登录页面")
         return LoginPage(self.driver)
 
     def navigate_to_register(self):
@@ -85,6 +89,7 @@ class HomePage(BasePage):
         return len(self.find_elements(self.FEATURE_CARDS))
 
     def is_hero_section_visible(self):
+        print(f"🔍 正在检查英雄区域，使用 driver: {id(self.driver)}")
         return self.is_element_present(self.HERO_SECTION)
 
     def get_navbar_links(self):

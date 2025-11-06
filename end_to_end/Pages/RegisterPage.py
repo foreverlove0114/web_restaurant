@@ -29,10 +29,10 @@ class RegisterPage(BasePage):
         self.send_keys(self.PASSWORD_INPUT, password)
         self.click_element(self.REGISTER_BUTTON)
 
-    def get_flash_message(self):
-        if self.is_element_present(self.FLASH_MESSAGES):
-            return self.get_text(self.FLASH_MESSAGES)
-        return None
+    # def get_flash_message(self):
+    #     if self.is_element_present(self.FLASH_MESSAGES):
+    #         return self.get_text(self.FLASH_MESSAGES)
+    #     return None
 
     def navigate_to_login(self):
         self.click_element(self.LOGIN_LINK)
