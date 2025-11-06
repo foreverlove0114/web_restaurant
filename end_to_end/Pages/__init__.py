@@ -8,7 +8,6 @@ from .PositionPage import PositionPage
 from .OrderPage import OrderPage
 from .AboutPage import AboutPage
 from .ContactPage import ContactPage
-from .ReservationsPage import ReservationsPage
 from .ProfilePage import ProfilePage
 
 __all__ = [
@@ -21,6 +20,5 @@ __all__ = [
     'OrderPage',
     'AboutPage',
     'ContactPage',
-    'ReservationsPage',
     'ProfilePage'
 ]
