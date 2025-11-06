@@ -192,7 +192,6 @@ class TestMenu:
 
     def test_menu_items_displayed(self,browser):
         from Pages.HomePage import HomePage
-        from Pages.MenuPage import MenuPage
 
         home_page = HomePage(browser)
         menu_page = home_page.navigate_to_menu()
@@ -209,7 +208,6 @@ class TestMenu:
 
     def test_menu_search_functionality(self, browser):
         from Pages.HomePage import HomePage
-        from Pages.MenuPage import MenuPage
 
         home_page = HomePage(browser)
         menu_page = home_page.navigate_to_menu()
@@ -237,3 +235,35 @@ class TestMenu:
         # 修改断言，先验证搜索功能是否工作
         assert after_search_count < initial_count, "搜索功能未生效"
         assert after_search_count == 1, "搜索结果为空"
+
+
+    def test_view_menu_item_details(self,browser):
+        from Pages.HomePage import HomePage
+
+        home_page = HomePage(browser)
+        menu_page = home_page.navigate_to_menu()
+
+        # 只有在有菜单项时才执行详情测试
+        if menu_page.get_menu_items_count() > 0:
+            position_page = menu_page.view_item_details(0)
+
+            assert position_page is not None, "无法打开商品详情页面"
+            assert position_page.get_position_title() != "", "商品标题为空"
+            assert position_page.get_price() != "", "商品价格为空"
+            assert position_page.is_image_visible(), "商品图片未显示"
+
+    def test_menu_items_details_content(self,browser):
+        from Pages.HomePage import HomePage
+
+        home_page = HomePage(browser)
+        menu_page = home_page.navigate_to_menu()
+
+        if menu_page.get_menu_items_count() > 0:
+            position_page = menu_page.view_item_details(0)
+
+            # 验证详情页面内容
+            ingredients = position_page.get_ingredients()
+            description = position_page.get_description()
+
+            assert ingredients != "", "商品成分为空"
+            assert description != "", "商品描述为空"
