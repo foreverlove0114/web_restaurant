@@ -28,6 +28,8 @@ class RegisterPage(BasePage):
         self.send_keys(self.ADDRESS_INPUT, address)
         self.send_keys(self.PASSWORD_INPUT, password)
         self.click_element(self.REGISTER_BUTTON)
+        from .HomePage import HomePage
+        return HomePage(self.driver)
 
     # def get_flash_message(self):
     #     if self.is_element_present(self.FLASH_MESSAGES):

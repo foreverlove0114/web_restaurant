@@ -6,6 +6,9 @@ class ProfilePage(BasePage):
     # 管理员功能定位器
     # ADMIN_LINKS = (By.CSS_SELECTOR, ".admin-content a")
 
+    PAGE_TITLE = (By.XPATH, "//h1[normalize-space()='Your Profile']")
+    CART_ICON = (By.CLASS_NAME, "cart-icon")
+
     # 个人信息定位器
     USER_INFO = (By.CLASS_NAME, "info-value")
 
@@ -21,8 +24,8 @@ class ProfilePage(BasePage):
     # 退出登录定位器
     LOGOUT_BUTTON = (By.CLASS_NAME, "btn-logout")
 
-    def __init__(self, driver):
-        super().__init__(driver)
+    def _init_(self, driver):
+        super()._init_(driver)
         self.driver = driver
 
     def get_user_info(self):
@@ -54,3 +57,10 @@ class ProfilePage(BasePage):
     #         return [link.text for link in links]
     #     return []
 
+    def get_page_title(self):
+        return self.get_text(self.PAGE_TITLE)
+
+    def navigate_to_cart(self):
+        self.click_element(self.CART_ICON)
+        from .OrderPage import OrderPage
+        return OrderPage(self.driver)

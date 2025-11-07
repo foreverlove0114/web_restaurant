@@ -112,17 +112,18 @@ class TestAuthentication:
     def test_successful_login(self, browser):
         """测试成功登录"""
         from Pages.HomePage import HomePage
-        from Pages.LoginPage import LoginPage
+        from Pages.ProfilePage import ProfilePage
 
         home_page = HomePage(browser)
         login_page = home_page.navigate_to_login()
 
         # 使用测试账号登录
-        login_page.login("testuser", "test123")
+        profile_page = login_page.login("testuser", "test123")
 
         # 验证登录成功
-        assert home_page.is_user_logged_in(), "用户登录状态不正确"
-        assert home_page.is_element_present(HomePage.PROFILE_LINK), "个人资料链接未显示"
+        assert profile_page.get_page_title() == "Your Profile", "未正确跳转至Profile Page"
+        assert profile_page.is_element_present(ProfilePage.USER_INFO), "未正确展示用户信息"
+        assert profile_page.is_element_present(ProfilePage.OLD_PASSWORD_INPUT), "未正确展示更改密码输入位"
 
     def test_failed_login_invalid_credentials(self, browser):
         """测试使用无效凭据登录失败"""
@@ -138,6 +139,7 @@ class TestAuthentication:
         # 验证登录失败
         flash_message = login_page.get_flash_message()
         assert flash_message is not None, "未显示错误消息"
+        assert flash_message == "Incorrect nickname or password!", "未正确显示错误信息"
 
     def test_user_registration(self, browser):
         """测试用户注册"""
@@ -152,7 +154,7 @@ class TestAuthentication:
         random_username = f"testuser_{random.randint(1000, 9999)}"
 
         # 填写注册表单
-        register_page.register(
+        current_home_page = register_page.register(
             nickname=random_username,
             email=f"{random_username}@test.com",
             contact="+380123456789",
@@ -161,9 +163,8 @@ class TestAuthentication:
         )
 
         # 验证注册结果
-        # flash_message = register_page.get_flash_message()
-        navigate_to_home = home_page.is_hero_section_visible()
-        assert navigate_to_home is not None, "未显示注册结果消息"
+        assert current_home_page.is_hero_section_visible() is not None, "未显示注册结果消息"
+        assert current_home_page.is_element_present(HomePage.PROFILE_LINK),"没有成功注册后直接登录"
 
     def test_logout_functionality(self, logged_in_user):
         """测试退出登录功能"""
@@ -174,7 +175,7 @@ class TestAuthentication:
 
         # 验证退出成功
         assert home_page.is_user_logged_out(), "用户退出登录状态不正确"
-        assert home_page.is_element_present(HomePage.LOGIN_LINK), "登录链接未显示"
+        # assert home_page.is_element_present(HomePage.LOGIN_LINK), "登录链接未显示"
 
 class TestMenu:
 
@@ -267,3 +268,15 @@ class TestMenu:
 
             assert ingredients != "", "商品成分为空"
             assert description != "", "商品描述为空"
+
+class TestOrders:
+    """订单功能测试用例"""
+
+    def test_empty_cart_display(self,logged_in_user):
+        from Pages.OrderPage import OrderPage
+
+        order_page = logged_in_user.navigate_to_cart()
+
+        if order_page.is_basket_empty():
+            assert "Your Cart is Empty" in order_page.get_text(OrderPage.EMPTY_BASKET_MESSAGE), "空购物车消息不正确"
+

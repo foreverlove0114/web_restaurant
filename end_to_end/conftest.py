@@ -22,9 +22,13 @@ def browser():
     # 设置基础URL
     driver.get("http://localhost:8000/")
 
+    print(f"把driver交给Home Page")
     yield driver
 
+
+
     # teardown
+    print(f"退出driver")
     driver.quit()
 
 
@@ -39,10 +43,22 @@ def logged_in_user(browser):
     # 如果未登录，则先登录
     if home_page.is_user_logged_out():
         print(f"开始用户登录流程")
-        login_page = home_page.navigate_to_login()
-        login_page.login("testuser", "test123")
 
-    return home_page
+        # 导航到登录页面并执行登录
+        login_page = home_page.navigate_to_login()
+        profile_page = login_page.login("testuser", "test123")
+
+        # 验证登录成功
+        assert profile_page.get_page_title() == "Your Profile", "登录后未正确跳转到个人资料页"
+        print("✅ 用户登录成功并跳转到个人资料页")
+
+        return profile_page  # ✅ 返回 ProfilePage
+
+    else:
+        # 用户已登录，导航到个人资料页
+        print("ℹ️ 用户已登录，导航到个人资料页")
+        profile_page = home_page.navigate_to_profile()
+        return profile_page
 
 
 # @pytest.fixture(scope="function")
