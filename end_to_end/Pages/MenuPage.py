@@ -25,6 +25,8 @@ class MenuPage(BasePage):
         self.click_element(self.SEARCH_BUTTON)
 
     def get_menu_items_count(self):
+        import time
+        time.sleep(1)
         return len(self.find_elements(self.MENU_ITEMS))
 
     def get_menu_item_info(self, index=0):
@@ -45,6 +47,10 @@ class MenuPage(BasePage):
             try:
                 details_button = items[index].find_element(*self.DETAILS_BUTTON)
                 details_button.click()
+
+                import time
+                time.sleep(1)
+
                 from .PositionPage import PositionPage
                 return PositionPage(self.driver)
             except Exception:

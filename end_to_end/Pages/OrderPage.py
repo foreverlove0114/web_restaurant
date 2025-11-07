@@ -32,6 +32,10 @@ class OrderPage(BasePage):
     def place_order(self):
         """下订单"""
         self.click_element(self.CHECKOUT_BUTTON)
+        import time
+        time.sleep(1)
+        from .MyOrderPage import MyOrderPage
+        return MyOrderPage(self.driver)
 
     def is_basket_empty(self):
         """检查购物车是否为空"""

@@ -8,6 +8,7 @@ class ProfilePage(BasePage):
 
     PAGE_TITLE = (By.XPATH, "//h1[normalize-space()='Your Profile']")
     CART_ICON = (By.CLASS_NAME, "cart-icon")
+    NAVBAR_MENU = (By.LINK_TEXT, "Menu")
 
     # 个人信息定位器
     USER_INFO = (By.CLASS_NAME, "info-value")
@@ -62,5 +63,14 @@ class ProfilePage(BasePage):
 
     def navigate_to_cart(self):
         self.click_element(self.CART_ICON)
+        import time
+        time.sleep(1)
         from .OrderPage import OrderPage
         return OrderPage(self.driver)
+
+    def navigate_to_menu(self):
+        self.click_element(self.NAVBAR_MENU)
+        import time
+        time.sleep(1)
+        from .MenuPage import MenuPage
+        return MenuPage(self.driver)

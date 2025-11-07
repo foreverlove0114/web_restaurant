@@ -14,6 +14,12 @@ class PositionPage(BasePage):
     QUANTITY_INPUT = (By.ID, "quantity")
     ADD_TO_CART_BUTTON = (By.XPATH, "//button[contains(text(), 'Add to Cart')]")
 
+    #Message
+    SUCCESS_MESSAGE = (By.CLASS_NAME, "alert")
+
+    #Navigation Bar
+    CART_ICON = (By.CLASS_NAME, "cart-icon")
+
     def __init__(self,driver):
         super().__init__(driver)
         self.driver = driver
@@ -39,6 +45,18 @@ class PositionPage(BasePage):
     def add_to_cart(self,quantity=1):
         self.set_quantity(quantity)
         self.click_element(self.ADD_TO_CART_BUTTON)
+        import time
+        time.sleep(1)
 
     def is_image_visible(self):
         return self.is_element_present(self.POSITION_IMAGE)
+
+    def flash_message_to_add_item(self):
+        return self.get_text(self.SUCCESS_MESSAGE)
+
+    def navigate_to_cart(self):
+        import time
+        time.sleep(1)
+        self.click_element(self.CART_ICON)
+        from .OrderPage import OrderPage
+        return OrderPage(self.driver)

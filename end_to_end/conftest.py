@@ -4,12 +4,14 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
+from routes.menu_routes import position
+
 
 @pytest.fixture(scope="function")
 def browser():
     """创建浏览器实例"""
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
@@ -33,7 +35,7 @@ def browser():
 
 
 @pytest.fixture(scope="function")
-def logged_in_user(browser):
+def logged_in_profile_page(browser):
     """已登录用户夹具"""
     from Pages.HomePage import HomePage
     from Pages.LoginPage import LoginPage
@@ -60,6 +62,17 @@ def logged_in_user(browser):
         profile_page = home_page.navigate_to_profile()
         return profile_page
 
+@pytest.fixture(scope="function")
+def order_page_with_item(logged_in_profile_page):
+
+    menu_page = logged_in_profile_page.navigate_to_menu()
+
+    position_page = menu_page.view_item_details(0)
+    position_page.add_to_cart(2)
+
+    order_page = position_page.navigate_to_cart()
+
+    return order_page
 
 # @pytest.fixture(scope="function")
 # def admin_user(browser):

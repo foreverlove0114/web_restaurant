@@ -1,6 +1,6 @@
 # tests/pages/my_order_page.py
 from selenium.webdriver.common.by import By
-from .base_page import BasePage
+from .BasePage import BasePage
 
 
 class MyOrderPage(BasePage):
@@ -51,9 +51,11 @@ class MyOrderPage(BasePage):
     def get_total_price(self):
         """获取总价"""
         if self.is_element_present(self.TOTAL_PRICE):
+            print("该total price定位器有出现")
             price_text = self.get_text(self.TOTAL_PRICE)
             # 提取价格部分
             if "Total Price:" in price_text:
+                print("Total Price有在")
                 return price_text.replace("Total Price:", "").strip()
         return None
 

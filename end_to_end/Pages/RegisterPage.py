@@ -38,5 +38,7 @@ class RegisterPage(BasePage):
 
     def navigate_to_login(self):
         self.click_element(self.LOGIN_LINK)
+        import time
+        time.sleep(1)
         from .LoginPage import LoginPage
         return LoginPage(self.driver)
