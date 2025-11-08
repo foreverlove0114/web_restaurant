@@ -365,7 +365,7 @@ class TestProfile:
             new_password= "test1234"
         )
 
-        assert logged_in_profile_page.get_password_changed_message_success() == "Password changed successfully!", "密码更改失败"
+        assert logged_in_profile_page.get_password_address_changed_message_success() == "Password changed successfully!", "密码更改失败"
 
         logged_in_profile_page.change_password(
             old_password="test1234",
