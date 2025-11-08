@@ -44,6 +44,8 @@ class OrderPage(BasePage):
     def navigate_to_active_orders(self):
         """导航到活跃订单"""
         self.click_element(self.ACTIVE_ORDERS_LINK)
+        import time
+        time.sleep(1)
         from .MyOrdersPage import MyOrdersPage
         return MyOrdersPage(self.driver)
 

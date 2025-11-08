@@ -23,6 +23,8 @@ class MyOrdersPage(BasePage):
     def get_page_title(self):
         """获取页面标题"""
         return self.get_text(self.PAGE_TITLE)
+        import time
+        time.sleep(1)
 
     def get_orders_count(self):
         """获取订单数量"""

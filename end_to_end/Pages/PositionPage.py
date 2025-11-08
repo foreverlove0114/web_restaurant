@@ -41,6 +41,8 @@ class PositionPage(BasePage):
 
     def set_quantity(self,quantity):
         self.send_keys(self.QUANTITY_INPUT,str(quantity))
+        import time
+        time.sleep(1)
 
     def add_to_cart(self,quantity=1):
         self.set_quantity(quantity)

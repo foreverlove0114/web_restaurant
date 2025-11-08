@@ -11,7 +11,20 @@ from routes.menu_routes import position
 def browser():
     """创建浏览器实例"""
     options = webdriver.ChromeOptions()
-    # options.add_argument('--headless')
+
+    # Disable the data breach alerts (password leak detection)
+    options.add_experimental_option(
+        "prefs", {"profile.password_manager_leak_detection": False}
+    )
+
+    # Other useful options for automation (optional, but recommended)
+    options.add_argument("--disable-infobars")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-popup-blocking")
+    options.add_experimental_option("excludeSwitches",
+                                           ["enable-automation"])  # Hides the "Chrome is being controlled..." message
+
+    options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')

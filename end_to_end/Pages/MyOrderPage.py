@@ -13,7 +13,7 @@ class MyOrderPage(BasePage):
     ORDER_TITLE = (By.TAG_NAME, "h2")
     ORDER_ITEMS = (By.CSS_SELECTOR, "ul li")
     ORDER_TIME = (By.XPATH, "//p[contains(text(), 'Date & Time:')]")
-    TOTAL_PRICE = (By.XPATH, "//p[contains(text(), 'Total Price:')]")
+    TOTAL_PRICE = (By.XPATH, "//p[contains(text(), 'UAH')]")
     CANCEL_BUTTON = (By.XPATH, "//button[contains(text(), 'Cancel Order')]")
     ORDER_ITEMS_LIST = (By.CSS_SELECTOR, "ul tr")  # 根据实际HTML结构调整
 
@@ -51,11 +51,10 @@ class MyOrderPage(BasePage):
     def get_total_price(self):
         """获取总价"""
         if self.is_element_present(self.TOTAL_PRICE):
-            print("该total price定位器有出现")
             price_text = self.get_text(self.TOTAL_PRICE)
             # 提取价格部分
             if "Total Price:" in price_text:
-                print("Total Price有在")
+                print(price_text)
                 return price_text.replace("Total Price:", "").strip()
         return None
 
