@@ -51,6 +51,8 @@ class ContactPage(BasePage):
         self.send_keys(self.SUBJECT_INPUT, subject)
         self.send_keys(self.MESSAGE_INPUT, message)
         self.click_element(self.SUBMIT_BUTTON)
+        import time
+        time.sleep(1)
 
     def is_map_visible(self):
         """检查地图是否可见"""

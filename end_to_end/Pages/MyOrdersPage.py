@@ -1,7 +1,7 @@
 # tests/pages/my_orders_page.py
 from selenium.webdriver.common.by import By
 from .BasePage import BasePage
-
+import time
 
 class MyOrdersPage(BasePage):
     """
@@ -16,6 +16,9 @@ class MyOrdersPage(BasePage):
     VIEW_DETAILS_LINKS = (By.LINK_TEXT, "View Details")
     ORDER_INFO = (By.CSS_SELECTOR, ".order-item p")
 
+    #message
+    FLASH_MESSAGE = (By.CSS_SELECTOR,".alert.alert-success")
+
     def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
@@ -23,8 +26,6 @@ class MyOrdersPage(BasePage):
     def get_page_title(self):
         """获取页面标题"""
         return self.get_text(self.PAGE_TITLE)
-        import time
-        time.sleep(1)
 
     def get_orders_count(self):
         """获取订单数量"""
@@ -41,15 +42,6 @@ class MyOrdersPage(BasePage):
         return None
 
     def view_order_details(self, index=0):
-        """
-        查看订单详情
-
-        Args:
-            index: 订单索引
-
-        Returns:
-            MyOrderPage: 订单详情页面对象
-        """
         links = self.find_elements(self.VIEW_DETAILS_LINKS)
         if index < len(links):
             # 点击前先滚动到元素
@@ -60,15 +52,6 @@ class MyOrdersPage(BasePage):
         return None
 
     def get_order_info(self, index=0):
-        """
-        获取订单信息
-
-        Args:
-            index: 订单索引
-
-        Returns:
-            dict: 包含订单信息的字典
-        """
         items = self.find_elements(self.ORDER_ITEMS)
         if index < len(items):
             order_text = items[index].text
@@ -96,17 +79,11 @@ class MyOrdersPage(BasePage):
         return orders_info
 
     def is_order_present(self, order_id):
-        """
-        检查指定订单是否存在
-
-        Args:
-            order_id: 订单ID
-
-        Returns:
-            bool: 如果订单存在返回True
-        """
         orders_info = self.get_all_orders_info()
         for order_info in orders_info:
             if f"Order №{order_id}" in order_info['raw_text']:
                 return True
         return False
+
+    def flash_message(self):
+        return self.get_text(self.FLASH_MESSAGE)

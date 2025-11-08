@@ -1,4 +1,7 @@
 # tests/pages/my_order_page.py
+import time
+
+from dotenv import set_key
 from selenium.webdriver.common.by import By
 from .BasePage import BasePage
 
@@ -12,9 +15,9 @@ class MyOrderPage(BasePage):
     # 页面元素定位器
     ORDER_TITLE = (By.TAG_NAME, "h2")
     ORDER_ITEMS = (By.CSS_SELECTOR, "ul li")
-    ORDER_TIME = (By.XPATH, "//p[contains(text(), 'Date & Time:')]")
-    TOTAL_PRICE = (By.XPATH, "//p[contains(text(), 'UAH')]")
-    CANCEL_BUTTON = (By.XPATH, "//button[contains(text(), 'Cancel Order')]")
+    ORDER_TIME = (By.XPATH, "//p[contains(., 'Date & Time:')]")
+    TOTAL_PRICE = (By.XPATH, "//p[contains(., 'UAH')]")
+    CANCEL_BUTTON = (By.XPATH, "//button[contains(., 'Cancel Order')]")
     ORDER_ITEMS_LIST = (By.CSS_SELECTOR, "ul tr")  # 根据实际HTML结构调整
 
     def __init__(self, driver):
@@ -87,31 +90,19 @@ class MyOrderPage(BasePage):
         return self.is_element_present(self.CANCEL_BUTTON)
 
     def cancel_order(self):
-        """
-        取消订单
-
-        Returns:
-            MyOrdersPage: 返回订单列表页面对象
-        """
         if self.is_cancel_button_present():
             self.click_element(self.CANCEL_BUTTON)
+            import time
+            time.sleep(1)
             from .MyOrdersPage import MyOrdersPage
             return MyOrdersPage(self.driver)
         else:
             raise Exception("取消订单按钮不存在")
 
     def get_order_summary(self):
-        """
-        获取订单摘要信息
-
-        Returns:
-            dict: 包含订单摘要的字典
-        """
         return {
             'order_id': self.get_order_id(),
             'title': self.get_order_title(),
             'order_time': self.get_order_time(),
             'total_price': self.get_total_price(),
-            'items_count': self.get_order_items_count(),
-            'can_cancel': self.is_cancel_button_present()
         }

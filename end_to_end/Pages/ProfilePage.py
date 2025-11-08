@@ -25,8 +25,12 @@ class ProfilePage(BasePage):
     # 退出登录定位器
     LOGOUT_BUTTON = (By.CLASS_NAME, "btn-logout")
 
+    # FLash message
+    CHANGE_SUCCESS = (By.CSS_SELECTOR,".alert.alert-success")
+    PASSWORD_CHANGE_FAILURE = (By.CSS_SELECTOR,".alert.alert-danger")
+
     def _init_(self, driver):
-        super()._init_(driver)
+        super().__init__(driver)
         self.driver = driver
 
     def get_user_info(self):
@@ -42,15 +46,25 @@ class ProfilePage(BasePage):
         self.send_keys(self.OLD_PASSWORD_INPUT,old_password)
         self.send_keys(self.NEW_PASSWORD_INPUT,new_password)
         self.click_element(self.CHANGE_PASSWORD_BUTTON)
+        import time
+        time.sleep(1)
 
     def change_address(self,new_address):
         self.send_keys(self.NEW_ADDRESS_INPUT,new_address)
-        self.click_element(self.CHANGE_PASSWORD_BUTTON)
+        self.click_element(self.CHANGE_ADDRESS_BUTTON)
+        import time
+        time.sleep(1)
 
     def logout(self):
         self.click_element(self.LOGOUT_BUTTON)
         from .HomePage import HomePage
         return HomePage(self.driver)
+
+    def get_password_address_changed_message_success(self):
+        return self.get_text(self.CHANGE_SUCCESS)
+
+    def get_password_changed_message_failure(self):
+        return self.get_text(self.PASSWORD_CHANGE_FAILURE)
 
     # def get_admin_links(self):
     #     if self.is_element_present(self.ADMIN_LINKS):
@@ -74,3 +88,8 @@ class ProfilePage(BasePage):
         time.sleep(1)
         from .MenuPage import MenuPage
         return MenuPage(self.driver)
+
+    def navigate_to_my_orders(self):
+        self.navigate_to_cart().navigate_to_active_orders()
+        from .MyOrdersPage import MyOrdersPage
+        return MyOrdersPage(self.driver)

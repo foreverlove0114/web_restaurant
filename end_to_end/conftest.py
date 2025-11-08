@@ -6,6 +6,40 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from routes.menu_routes import position
 
+import sys
+import os
+import pytest
+
+# 关键修复：添加正确的路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+
+# 添加两条路径确保覆盖所有情况
+sys.path.insert(0, current_dir)    # end_to_end 目录
+sys.path.insert(0, parent_dir)     # 项目根目录
+
+print(f"🔧 conftest.py 调试信息:")
+print(f"   当前文件: {__file__}")
+print(f"   当前目录: {current_dir}")
+print(f"   父目录: {parent_dir}")
+print(f"   Python路径: {sys.path}")
+
+# 现在导入页面模块
+try:
+    from Pages.HomePage import HomePage
+    from Pages.LoginPage import LoginPage
+    from Pages.ProfilePage import ProfilePage
+    print("✅ 成功导入所有页面模块")
+except ImportError as e:
+    print(f"❌ 导入失败: {e}")
+    # 详细调试
+    pages_dir = os.path.join(current_dir, 'Pages')
+    print(f"📁 Pages目录: {pages_dir}")
+    print(f"📁 Pages目录存在: {os.path.exists(pages_dir)}")
+    if os.path.exists(pages_dir):
+        print(f"📁 Pages目录内容: {os.listdir(pages_dir)}")
+    raise
+
 
 @pytest.fixture(scope="function")
 def browser():
@@ -24,7 +58,7 @@ def browser():
     options.add_experimental_option("excludeSwitches",
                                            ["enable-automation"])  # Hides the "Chrome is being controlled..." message
 
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')

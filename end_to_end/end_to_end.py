@@ -4,6 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.devtools.v140.page import navigate
 import time
 
+from end_to_end.Pages import HomePage
+from routes.order_routes import my_order
+
 
 class TestNavigation:
     """导航功能测试用例"""
@@ -171,8 +174,8 @@ class TestAuthentication:
         """测试退出登录功能"""
         from Pages.HomePage import HomePage
 
-        home_page = logged_in_profile_page
-        home_page.click_logout()
+        profile_page = logged_in_profile_page
+        home_page = profile_page.logout()
 
         # 验证退出成功
         assert home_page.is_user_logged_out(), "用户退出登录状态不正确"
@@ -312,3 +315,121 @@ class TestOrders:
         my_orders = order_page_with_item.navigate_to_active_orders()
 
         assert my_orders.get_page_title() == "Your Orders", "未正确跳转到我的订单页面"
+
+class TestContact:
+
+    def test_contact_page_loaded_successfully(self,browser):
+        from Pages.HomePage import HomePage
+
+        home_page = HomePage(browser)
+        contact_page = home_page.navigate_to_contact()
+
+        assert contact_page.get_page_title() == "Contact Us", "联系页面标题不正确"
+        assert contact_page.is_map_visible(), "地图未显示"
+        assert contact_page.is_contact_form_present(), "联系表单未显示"
+        assert contact_page.get_info_cards_count() == 4, "信息卡片数量不正确"
+
+    def test_contact_form_submission(self, browser):
+        """测试联系表单提交"""
+        # from pages.home_page import HomePage
+        # from pages.contact_page import ContactPage
+
+        home_page = HomePage(browser)
+        contact_page = home_page.navigate_to_contact()
+
+        # 提交联系表单
+        contact_page.submit_contact_form(
+            name="Test User",
+            email="test@example.com",
+            subject="Test Subject - Automated Test",
+            message="This is a test message from automated testing system."
+        )
+
+        assert contact_page.get_page_title() == "Contact Us", "联系页面标题不正确"
+
+class TestProfile:
+
+    def test_profile_page_loaded_successfully(self,logged_in_profile_page):
+
+        user_info = logged_in_profile_page.get_user_info()
+
+        assert user_info['nickname'] == "testuser", "用户名显示错误"
+        assert user_info['email'] == "testuser@email.com", "用户邮箱显示错误"
+        assert user_info['phone'] == "+0123456789", "用户联络号码显示错误"
+        assert user_info['address'] == "456 street", "用户地址显示错误"
+
+    def test_change_password_functionality_successfully(self,logged_in_profile_page):
+
+        logged_in_profile_page.change_password(
+            old_password= "test123",
+            new_password= "test1234"
+        )
+
+        assert logged_in_profile_page.get_password_changed_message_success() == "Password changed successfully!", "密码更改失败"
+
+        logged_in_profile_page.change_password(
+            old_password="test1234",
+            new_password="test123"
+        )
+
+    def test_change_password_functionality_failure(self, logged_in_profile_page):
+        logged_in_profile_page.change_password(
+            old_password="test1234",
+            new_password="test12345"
+        )
+
+        assert logged_in_profile_page.get_password_changed_message_failure() == "Passwords do not match!"
+
+    def test_change_address_functionality(self,logged_in_profile_page):
+        from Pages.ProfilePage import ProfilePage
+
+        logged_in_profile_page.change_address("456 street")
+        update_user_info = logged_in_profile_page.get_user_info()
+
+        assert logged_in_profile_page.get_password_address_changed_message_success() == "Address updated successfully!"
+        assert "456 street" == update_user_info["address"]
+
+    def test_logout_from_profile_page(self,logged_in_profile_page):
+        home_page = logged_in_profile_page.logout()
+        assert home_page.is_user_logged_out(), "退出登录失败"
+
+
+class TestOrdersAdvanced:
+
+    def test_order_cancellation(self,order_page_with_item):
+
+        my_order = order_page_with_item.place_order()
+        order_id = my_order.get_order_id()
+        my_orders = my_order.cancel_order()
+
+
+        assert my_orders.flash_message() == "Order deleted!"
+        assert my_orders.is_order_present(order_id) == False, "Order没有正确被删除"
+
+    def test_order_information_display(self,logged_in_profile_page):
+
+        my_orders = logged_in_profile_page.navigate_to_my_orders()
+
+        if my_orders.get_orders_count() > 0:
+            order_info = my_orders.get_order_info(0)
+            assert order_info is not None, "无法获取订单信息"
+            assert 'Order №2' in order_info['raw_text'], "订单原始文本缺失"
+            assert 'Order №2' in order_info['lines'][0], f"订单ID不在第一行中: {order_info['lines'][0]}"
+            print(f"{order_info['lines']}")
+
+            my_order_page = my_orders.view_order_details(0)
+            order_summary = my_order_page.get_order_summary()
+
+            assert order_summary['order_id'] == "2"
+            assert order_summary["title"] == "Your Order №2"
+            assert order_summary["order_time"] == "2025-10-19 11:40:22.811939"
+            assert order_summary["total_price"] == "190 UAH"
+
+    def test_empty_orders_display(self,browser):
+
+        home_page = HomePage(browser)
+        my_orders_page = home_page.navigate_to_login().login("jiexiangyu","JXiang29").navigate_to_my_orders()
+
+        if my_orders_page.is_empty_orders_message_displayed():
+            message = my_orders_page.get_empty_orders_message()
+            assert "You don’t have any orders yet" in message, "空订单消息不正确"

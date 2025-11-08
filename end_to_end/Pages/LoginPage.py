@@ -22,6 +22,8 @@ class LoginPage(BasePage):
         self.send_keys(self.NICKNAME_INPUT,nickname)
         self.send_keys(self.PASSWORD_INPUT,password)
         self.click_element(self.LOGIN_BUTTON)
+        import time
+        time.sleep(1)
         from .ProfilePage import ProfilePage
         return ProfilePage(self.driver)
 
