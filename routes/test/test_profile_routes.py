@@ -63,7 +63,7 @@ def test_change_address(logged_in_user):
     csrf_token = extract_csrf_token(get_response)
 
     post_data = {
-        'new_address':'456 street',
+        'new_address':'123 street',
         'csrf_token': csrf_token
     }
 

@@ -58,6 +58,7 @@ def test_view_order_list(logged_in_user):
 def test_view_order_details(logged_in_user, created_order_id):
     order_id = created_order_id
     response = logged_in_user.get(f"{BASE_URL}/my_order/{order_id}")
+    print(f"Order ID: {order_id}")
     assert "Items List:" in response.text
     assert "Date & Time" in response.text
     assert "Cancel Order" in response.text

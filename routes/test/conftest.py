@@ -241,10 +241,10 @@ def created_order_id(logged_in_user):
         pytest.skip("Cannot create order - no CSRF token")
 
     create_order_data = {'csrf_token': csrf_token}
-    create_order_response = logged_in_user.post(f"{BASE_URL}/create_order", data=create_order_data)
+    logged_in_user.post(f"{BASE_URL}/create_order", data=create_order_data)
 
     # 3. 获取订单ID
-    order_id = extract_order_id_from_response(logged_in_user, create_order_response)
+    order_id = extract_order_id_from_response(logged_in_user)
 
     if not order_id:
         pytest.skip("Failed to create test order")
@@ -255,26 +255,26 @@ def created_order_id(logged_in_user):
     # logged_in_user.post(f"{BASE_URL}/cancel_order/{order_id}")
 
 
-def extract_order_id_from_response(logged_in_user, response):
-    """从订单创建响应中提取订单ID"""
+def extract_order_id_from_response(logged_in_user):
+    """从订单列表获取最新的订单ID（最后一个）"""
+    orders_response = logged_in_user.get(f"{BASE_URL}/my_orders")
+    if orders_response.status_code != 200:
+        return None
+
+    from bs4 import BeautifulSoup
     import re
 
-    # 方法1: 从重定向URL提取
-    if response.status_code == 302:
-        redirect_url = response.headers.get('Location', '')
-        match = re.search(r'/my_order/(\d+)', redirect_url)
+    soup = BeautifulSoup(orders_response.text, 'html.parser')
+
+    # 查找所有订单链接
+    order_links = soup.find_all('a', href=re.compile(r'/my_order/\d+'))
+
+    if order_links:
+        # 获取最后一个订单链接（最新的订单）
+        latest_order_link = order_links[-1]
+        href = latest_order_link.get('href')
+        match = re.search(r'/my_order/(\d+)', href)
         if match:
             return match.group(1)
-
-    # 方法2: 从订单列表获取最新订单
-    orders_response = logged_in_user.get(f"{BASE_URL}/my_orders")
-    if orders_response.status_code == 200:
-        soup = BeautifulSoup(orders_response.text, 'html.parser')
-        order_link = soup.find('a', href=re.compile(r'/my_order/\d+'))
-        if order_link:
-            href = order_link.get('href')
-            match = re.search(r'/my_order/(\d+)', href)
-            if match:
-                return match.group(1)
 
     return None
