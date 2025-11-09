@@ -95,7 +95,7 @@ def test_get_edit_position_user(logged_in_user):
 def test_post_edit_position(logged_in_admin):
     """基础编辑菜品测试"""
     # 获取编辑页面
-    get_response = logged_in_admin.get(f"{BASE_URL}/edit_position/2")
+    get_response = logged_in_admin.get(f"{BASE_URL}/edit_position/10")
     csrf_token = extract_csrf_token(get_response)
 
     # 准备编辑数据
