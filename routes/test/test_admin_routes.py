@@ -127,7 +127,7 @@ def test_post_edit_position_image(logged_in_admin):
     # 准备编辑数据
     edit_data = {
         'csrf_token': csrf_token,
-        "name": "Margherita",
+        "name": "Test Spaghetti",
         "weight": "450",
         "ingredients": "Dough, tomato sauce, mozzarella, basil, olive oil",
         "description": "Classic Italian pizza with delicate tomato sauce, fresh mozzarella and aromatic basil. Perfect choice for lovers of traditional Italian cuisine.",
@@ -192,7 +192,7 @@ def test_menu_check_change_status(logged_in_admin):
     post_change_status = {
         'csrf_token':csrf_token,
         'pos_id':10,
-        'change_status':''
+        'change_status':'' #random input anything, just let the key "change_status" exist, that's it
     }
 
     response = logged_in_admin.post(
@@ -223,7 +223,7 @@ def test_menu_check_delete_position(logged_in_admin):
 
     assert response.status_code == 200
     # 检查页面是否重新加载了菜单列表
-    assert "Test Pizza" not in response.text
+    assert "Test" not in response.text
     print("✅ 成功删除测试菜品")
 
 def test_admin_get_all_users(logged_in_admin):
